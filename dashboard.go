@@ -123,7 +123,13 @@ func calculate(currentValue int, previousValue int) (salesReport, error) {
 		if previousValue == 0 {
 			return 100
 		}
-		return int(((currentValue - previousValue) / previousValue) * 100)
+		currentPercentage := int(((currentValue - previousValue) / previousValue) * 100)
+
+		if currentPercentage <= 100 {
+			return currentPercentage
+		}
+
+		return 100
 	}()
 
 	isPositive := currentValue > previousValue
