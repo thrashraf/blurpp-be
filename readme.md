@@ -9,3 +9,8 @@ how to run it?
 
 1. Add Docker
 2. Add github actions
+
+Docker
+
+1. `docker build -t blurpp .`
+2. `docker run -p 8080:8080 blurpp`
