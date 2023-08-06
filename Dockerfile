@@ -16,6 +16,8 @@ RUN go mod download
 # Copy all the Go source files to the working directory
 COPY *.go ./
 
+COPY pb_data ./pb_data
+
 # Build the Go application and name the binary as "blurpp"
 RUN go build -o blurpp
 
