@@ -1,28 +1,26 @@
-# Use the latest Alpine Linux image as the base
-FROM alpine:latest
+# syntax=docker/dockerfile:1
+# stage 1 build
+FROM golang:1.19-alpine AS build
 
-# Install necessary packages to build and run the Go application
-RUN apk add --no-cache build-base go ca-certificates unzip openssh
 
-# Set the working directory to /app
-WORKDIR /app
+RUN apk add -v build-base
+RUN apk add -v ca-certificates
+RUN apk add --no-cache \
+  openssh
 
-# Copy go.mod and go.sum to the working directory
-COPY go.mod go.sum ./
+WORKDIR /pb
 
-# Download Go module dependencies
+COPY go.mod ./
+COPY go.sum ./
 RUN go mod download
 
-# Copy all the Go source files to the working directory
 COPY *.go ./
+RUN go build -o pocketbase
 
-COPY pb_data ./pb_data
+# stage 2 build to cut down final image size
+FROM alpine
 
-# Build the Go application and name the binary as "blurpp"
-RUN go build -o blurpp
-
-# Expose port 8080 (not strictly required in the Dockerfile, but good for documentation purposes)
+WORKDIR /
+COPY --from=build /pb /pb
 EXPOSE 8080
-
-# Start the Go application
-CMD ["./blurpp", "serve", "--http=0.0.0.0:8080"]
+CMD [ "/pb/pocketbase","serve", "--http=0.0.0.0:8080" ]
