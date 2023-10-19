@@ -14,3 +14,8 @@ Docker
 
 1. `docker build -t blurpp .`
 2. `docker run -p 8080:8080 blurpp`
+
+Build
+
+1. `CGO_ENABLED=0 go build`
+2. `./blurpp serve`
